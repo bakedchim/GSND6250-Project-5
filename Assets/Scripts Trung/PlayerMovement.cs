@@ -30,16 +30,17 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody rb;
 
     // Double jump
-    int doubleJumpCharge = 99;
+    public int doubleJumpCharge = 1;
 
     bool canDoubleJump = false;
 
     public bool canMove = true;
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.freezeRotation = true;    
+        rb.freezeRotation = true;
     }
 
     // Update is called once per frame
@@ -49,7 +50,7 @@ public class PlayerMovement : MonoBehaviour
         grounded = Physics.Raycast(transform.position, Vector3.down, playerCollider.height * playerObj.localScale.y * 0.5f + 0.2f, whatIsGround);
         MyInput();
         SpeedControl();
-        Debug.Log(grounded);
+        // Debug.Log(grounded);
         // handle drag
         if (grounded)
         {
@@ -67,6 +68,11 @@ public class PlayerMovement : MonoBehaviour
         if (!canMove)
             return;
         MovePlayer();
+    }
+
+    public void ResetDoubleJump()
+    {
+        doubleJumpCharge = 2;
     }
 
     private void MyInput()

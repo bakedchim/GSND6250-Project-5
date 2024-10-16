@@ -15,6 +15,7 @@ public class DisappearingPlatform : MonoBehaviour
 
     IEnumerator FallDown()
     {
+        yield return new WaitForSeconds(0.2f);
         float t = 1f;
         while (t > 0)
         {
