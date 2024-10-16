@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     public float groundDrag = 6.0f;
 
     [Header("Ground Check")]
+    public Transform playerObj;
     public CapsuleCollider playerCollider;
     public LayerMask whatIsGround;
     bool grounded;
@@ -43,7 +44,7 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         // ground check
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerCollider.height * 0.5f + 0.2f, whatIsGround);
+        grounded = Physics.Raycast(transform.position, Vector3.down, playerCollider.height * playerObj.localScale.y * 0.5f + 0.2f, whatIsGround);
         MyInput();
         SpeedControl();
         Debug.Log(grounded);
@@ -82,7 +83,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void MovePlayer()
     {
-        moveDirection = transform.forward * verticalInput + transform.right * horizontalInput;
+        moveDirection = transform.forward * -horizontalInput + transform.right * verticalInput ;
         
         if(grounded)
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
