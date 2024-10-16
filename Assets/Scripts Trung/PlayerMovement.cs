@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     public float groundDrag = 6.0f;
 
     [Header("Ground Check")]
+    public Transform playerObj;
     public CapsuleCollider playerCollider;
     public LayerMask whatIsGround;
     bool grounded;
@@ -29,27 +30,31 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody rb;
 
     // Double jump
-    int doubleJumpCharge = 1;
+    public int doubleJumpCharge = 1;
+
+    bool canDoubleJump = false;
 
     public bool canMove = true;
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.freezeRotation = true;    
+        rb.freezeRotation = true;
     }
 
     // Update is called once per frame
     private void Update()
     {
         // ground check
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerCollider.height * 0.5f + 0.2f, whatIsGround);
+        grounded = Physics.Raycast(transform.position, Vector3.down, playerCollider.height * playerObj.localScale.y * 0.5f + 0.25f, whatIsGround);
         MyInput();
         SpeedControl();
-        Debug.Log(grounded);
+        // Debug.Log(grounded);
         // handle drag
         if (grounded)
         {
+            canDoubleJump = true;
             rb.drag = groundDrag;
         }
         else
@@ -65,16 +70,26 @@ public class PlayerMovement : MonoBehaviour
         MovePlayer();
     }
 
+    public void ResetDoubleJump()
+    {
+        doubleJumpCharge = 2;
+    }
+
     private void MyInput()
     {
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
 
+        if (Input.GetKeyDown(jumpKey))
+        {
+            Debug.Log(grounded);
+        }
         if (Input.GetKeyDown(jumpKey) && grounded)
         {
             Jump();
-        } else if (Input.GetKeyDown(jumpKey) && doubleJumpCharge > 0)
+        } else if (Input.GetKeyDown(jumpKey) && doubleJumpCharge > 0 && canDoubleJump)
         {
+            canDoubleJump = false;
             Jump();
             doubleJumpCharge--;
         }
@@ -82,7 +97,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void MovePlayer()
     {
-        moveDirection = transform.forward * verticalInput + transform.right * horizontalInput;
+        moveDirection = transform.forward * -horizontalInput + transform.right * verticalInput ;
         
         if(grounded)
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);

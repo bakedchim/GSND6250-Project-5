@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class DisappearingPlatform : MonoBehaviour
 {
-    public Transform objectToDisappear;
     // If player touch the top of the platform, the platform will fall down and disappear
     private void OnCollisionEnter(Collision collision)
     {
@@ -16,12 +15,14 @@ public class DisappearingPlatform : MonoBehaviour
 
     IEnumerator FallDown()
     {
+        yield return new WaitForSeconds(0.2f);
         float t = 1f;
         while (t > 0)
         {
-            objectToDisappear.position -= new Vector3(0, 0.02f, 0);
+            transform.position -= new Vector3(0, 0.1f, 0);
             t -= 0.01f;
             yield return null;
         }
+        Destroy(gameObject);
     }
 }
