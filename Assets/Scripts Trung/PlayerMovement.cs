@@ -47,7 +47,7 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         // ground check
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerCollider.height * playerObj.localScale.y * 0.5f + 0.2f, whatIsGround);
+        grounded = Physics.Raycast(transform.position, Vector3.down, playerCollider.height * playerObj.localScale.y * 0.5f + 0.25f, whatIsGround);
         MyInput();
         SpeedControl();
         // Debug.Log(grounded);
@@ -80,6 +80,10 @@ public class PlayerMovement : MonoBehaviour
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
 
+        if (Input.GetKeyDown(jumpKey))
+        {
+            Debug.Log(grounded);
+        }
         if (Input.GetKeyDown(jumpKey) && grounded)
         {
             Jump();
