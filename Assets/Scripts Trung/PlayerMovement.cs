@@ -30,7 +30,9 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody rb;
 
     // Double jump
-    int doubleJumpCharge = 1;
+    int doubleJumpCharge = 99;
+
+    bool canDoubleJump = false;
 
     public bool canMove = true;
     // Start is called before the first frame update
@@ -51,6 +53,7 @@ public class PlayerMovement : MonoBehaviour
         // handle drag
         if (grounded)
         {
+            canDoubleJump = true;
             rb.drag = groundDrag;
         }
         else
@@ -74,8 +77,9 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(jumpKey) && grounded)
         {
             Jump();
-        } else if (Input.GetKeyDown(jumpKey) && doubleJumpCharge > 0)
+        } else if (Input.GetKeyDown(jumpKey) && doubleJumpCharge > 0 && canDoubleJump)
         {
+            canDoubleJump = false;
             Jump();
             doubleJumpCharge--;
         }
